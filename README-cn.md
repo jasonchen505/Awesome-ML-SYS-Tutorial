@@ -35,7 +35,10 @@ $$
 - [Codec、RVQ、Dual AR、Thinker-Talker——深入 Qwen3-Omni 与 S2 Pro 的 Omni 模型推理流程](./transformers/omni/readme.md)：分析 Qwen3-Omni 与 S2 Pro 的 Omni 模型推理流程，同样刊载于[知乎](https://zhuanlan.zhihu.com/p/2023413564229042799)和[英文版本](./transformers/omni/readme-en.md)。
 - [当 SGLang OOM 的时候，究竟在 OOM 什么？](./sglang/kvcache-code-walk-through/mem-fraction-static.md)：分析 SGLang Omni 在 OOM 的时候，究竟在 OOM 什么，同样刊载于[知乎](https://zhuanlan.zhihu.com/p/2041811635405336677)和[英文版本](./sglang/kvcache-code-walk-through/mem-fraction-static-en.md)。
 - [SGLang Omni：从 decode 计算特性出发，重新设计多 stage 生成模型的推理框架](./sglang/sglang-omni/why-sglang-omni.md)：为什么 multi-stage decoding 才是划分模型的正确视角、multi-stage decoding 模型有什么计算共性，以及 SGLang Omni 的调度解耦 / 通信分层 / 显存隔离三层设计。同样刊载于[英文版本](./sglang/sglang-omni/why-sglang-omni-en.md)和[知乎：SGLang Omni：从 decode 计算特性出发，重新设计多 stage 生成模型的推理框架](https://zhuanlan.zhihu.com/p/2043972741326451200)。
-- [RL 训推不一致的根源其实在 inference 系统中广泛存在](./sglang/sglang-omni/moss-tts-local-batch-encoder-skew-zh.md)：MOSS-TTS Local batch encoder 的一次复盘，讨论受控变量、BF16 GEMM shape effect，以及 neural tokenizer 带来的 token drift。同样刊载[英文版本](./sglang/sglang-omni/moss-tts-local-batch-encoder-skew.md)。
+- [深入浅出 SGLang Omni 对 TTS 模型的优化思路](./sglang/sglang-omni/tts-optimization-zh.md)：我们如何把 Higgs 与 MOSS-TTS-Local 的 TTS serving 在 SGLang-Omni 上做到 1.9–3.4× 加速——encoder LRU caching、delay-pattern / backbone+inner 的 codec 调度、CUDA Graph + async CPU–GPU decode，以及 vocoder batching / windowed streaming。同样刊载[英文版本](./sglang/sglang-omni/tts-optimization.md)和[知乎：深入浅出 SGLang Omni 对 TTS 模型的优化思路](https://zhuanlan.zhihu.com/p/2054821717529343214)。
+- [生命周期与框架抽象：SGLang Omni TTS Serving 重构](./sglang/sglang-omni/tts-refactor-zh.md)：我们如何为六个架构各异的 TTS 后端抽象出 engine 启动、状态传输、缓存、vocoder 生命周期和调度等公共机制；重构净删除 2840 行 non-test 实现代码，并降低了新模型接入生产级 Serving 的成本。同样刊载于[英文版本](./sglang/sglang-omni/tts-refactor.md)。
+- [重新审视 CPU 资源作为语音模型 Serving 过程的一等公民](./sglang/sglang-omni/cpu-first-class-citizen-zh.md)：CI 上跨轮 4 倍的吞吐波动最终查到主机 CPU 争用而非任何代码改动；用 PSI 与每请求 CPU 毫秒数区分 SMT sibling 导致的 cycle 膨胀与排队等核，并做了一个拓扑感知的 CPU allocator——重争用下能保住 92% 到 100% 的干净吞吐，但搬到没有争用的生产机器上收益几乎归零。同样刊载于[英文版本](./sglang/sglang-omni/cpu-first-class-citizen.md)。
+- [从一次 Batch Size 争论，思考 SGLang Omni 的性能验证与调度取舍](./sglang/sglang-omni/batch.md)：通过 MiniCPM-o Code2Wav 的收集策略、batch 上限和提前返回实验，分析局部等待与端到端性能的取舍，以及如何用 CPU 资源控制、重复实验和质量验证决定默认配置。同样刊载于[英文版本](./sglang/sglang-omni/batch-en.md)和[知乎](https://zhuanlan.zhihu.com/p/2085229719906272144)。
 
 ## RLHF System 开发笔记
 
@@ -92,6 +95,7 @@ $$
 
 ### 算法与理论
 
+- [dots3-note Preview：为了挑战 IMO，LLM 选手做了什么](./sglang/dots3-note/readme.md)：TEMPO 的 macro-step 与生成式 critic 如何重塑超长程 agentic RL，以及 40 到 50 小时、数千轮交互的 agent 给 inference 带来的新问题——512K 窗口下 MLA 与 hybrid SWA 的 KV 显存账、上下文裁剪导致的 cache 失效与周期性 re-prefill，以及 DSA indexer 在重算中的开销占比。同样刊载于[英文版本](./sglang/dots3-note/readme-en.md)和[知乎](https://zhuanlan.zhihu.com/p/2072662462084731844)。
 - [Kimi K1.5: Long Context RL 的成功实践](./rlhf/partial-rollout/readme.md)：Long Context RLHF 的工业级实现，一直很喜欢 kimi 团队的技术报告，同样刊载于 [Kimi K1.5: Long Context RL 的成功实践](https://zhuanlan.zhihu.com/p/1894282607325344277)。
 - [Rule-based Reward](https://zhuanlan.zhihu.com/p/13211508979)：这篇只有知乎，浅浅写了写，老实说原文写的我并不太喜欢，但是 determined reward 确实 charming。
 - [SWE-Bench：如何构造 LLM 时代的优秀 Benchmark](https://zhuanlan.zhihu.com/p/16292266518)，基于 SWE-Bench 的论文阅读笔记，如何构造好的 benchmark 以为 post-training 提供细粒度 reward，是永恒且美妙的话题。
